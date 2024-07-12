@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	.text-balance {
+		text-wrap: balance;
+	}
+}
+
+h1,
+.h1-text {
+	@apply text-[32px] font-semibold;
+}
+
+h2,
+.h2-text {
+	@apply text-2xl font-medium;
+}
+
+h3,
+.h3-text {
+	@apply text-xl font-medium;
+}
+
+h6,
+.h6-text {
+	@apply text-[15px];
+}
+
+p,
+.p-text {
+	@apply text-[13px];
+}
