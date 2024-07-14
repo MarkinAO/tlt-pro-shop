@@ -40,6 +40,7 @@ export default function Auth() {
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const result = await authAPI(data);
     if (result) {
+      sessionStorage.setItem("user", JSON.stringify(result.user))
       router.push("./products");
     }
     reset();

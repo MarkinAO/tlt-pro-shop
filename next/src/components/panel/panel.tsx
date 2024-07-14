@@ -5,7 +5,9 @@ export const Panel = () => {
   const { listType, toggleListType, search, setSearch } = useStore(
     (state) => state
   );
-
+  const isAdmin = JSON.parse(
+    sessionStorage.getItem("user") || ""
+  ).roles.includes(1);
   return (
     <div className="flex justify-between gap-1 items-center p-[10px] w-full">
       <input
@@ -60,7 +62,12 @@ export const Panel = () => {
             />
           </svg>
         </div>
-        <button className="px-6 py-2 rounded-md font-medium text-base transition duration-200 bg-slate-300 hover:bg-slate-400">
+        <button
+          className={`px-6 py-2 rounded-md font-medium text-base transition duration-200 bg-slate-300 ${
+            isAdmin && "hover:bg-slate-400"
+          }`}
+          disabled={!isAdmin}
+        >
           Добавить
         </button>
       </div>
