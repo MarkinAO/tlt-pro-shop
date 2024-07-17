@@ -1,17 +1,17 @@
 "use client";
 import useSWR from "swr";
-import { fetcher } from "@/api/api";
+import { fetcher } from "@/shared/api/api";
 import type { TProduct } from "@/model/model";
 import Loader from "../loader/Loader";
 import { LineItem } from "./components/lineItem";
 import { GridItem } from "./components/gridItem";
 import { useStore } from "@/model/store";
-import { isArray } from "util";
 
 export const ProductList = () => {
-  const { listType, currentPage } = useStore((store) => store);
-  const { data } = useSWR<TProduct[]>(`/products?_page=${currentPage}`, () =>
-    fetcher("/products", {
+  const { listType, currentPage, search } = useStore((store) => store);
+  const URL = `/products?_page=${currentPage}${search && "&q=" + search}`;
+  const { data } = useSWR<TProduct[]>(URL, () =>
+    fetcher(URL, {
       method: "GET",
     })
   );
@@ -46,9 +46,10 @@ export const ProductList = () => {
             !listType && "grid grid-rows-2 grid-cols-4 gap-y-[10px]"
           }`}
         >
-          {isArray(data) && data?.map((el, i) => {
-            const manufacture = (id: number) =>
-              manufactures?.find((el) => el.id === id)?.name;
+          {data?.map((el, i) => {
+            const manufacture = (id: number) => {
+              return manufactures?.find((el) => el.id === id)?.name;
+            };
             return (
               <div key={i}>
                 {listType && (

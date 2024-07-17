@@ -2,9 +2,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authAPI } from "@/api/api";
+import { authAPI } from "@/shared/api/api";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useCheckAuth } from "@/shared/hooks/checkAuth";
+
 // import { Metadata } from 'next';
 
 // export const metadata: Metadata = {
@@ -20,12 +22,11 @@ type FormFields = z.infer<typeof formSchema>;
 
 export default function Auth() {
   const router = useRouter();
+  const { isAuth } = useCheckAuth();
+
   useEffect(() => {
-    const token = sessionStorage.getItem("token") ? true : false;
-    if (token) {
-      router.push("./products");
-    }
-  }, []);
+    isAuth && router.push("./products");
+  }, [isAuth]);
 
   const {
     register,
@@ -40,8 +41,7 @@ export default function Auth() {
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const result = await authAPI(data);
     if (result) {
-      sessionStorage.setItem("user", JSON.stringify(result.user))
-      router.push("./products");
+      sessionStorage.setItem("user", JSON.stringify(result.user));
     }
     reset();
   };
@@ -63,7 +63,7 @@ export default function Auth() {
                 <h6>Почта</h6>
                 <input
                   placeholder="Почта"
-                  className={`p-text bg-[#C9CFD8] placeholder:text-[#888F99] pl-[10px] py-[6px] block w-full rounded-md border focus:border-[#C9CFD8] focus:bg-transparent outline-none ${
+                  className={`input w-full ${
                     errors?.email && "border-red-400"
                   }`}
                   {...register("email")}
@@ -76,7 +76,7 @@ export default function Auth() {
                 <h6>Пароль</h6>
                 <input
                   placeholder="Пароль"
-                  className={`p-text bg-[#C9CFD8] placeholder:text-[#888F99] pl-[10px] py-[6px] block w-full rounded-md border focus:border-[#C9CFD8] focus:bg-transparent outline-none ${
+                  className={`input w-full ${
                     errors?.password && "border-red-400"
                   }`}
                   {...register("password")}
@@ -88,9 +88,7 @@ export default function Auth() {
             </div>
             <div className="block mx-auto">
               <button
-                className={`px-6 py-2 rounded-md font-medium text-base transition duration-200 bg-slate-300 ${
-                  isValid && "hover:bg-slate-400"
-                }`}
+                className={`button ${!isValid && "hover:bg-slate-300"}`}
                 disabled={!isValid}
               >
                 Войти

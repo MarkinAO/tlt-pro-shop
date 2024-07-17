@@ -3,32 +3,48 @@
 @tailwind utilities;
 
 @layer utilities {
-	.text-balance {
-		text-wrap: balance;
-	}
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
 h1,
 .h1-text {
-	@apply text-[32px] font-semibold;
+  @apply text-[32px] font-semibold;
 }
 
 h2,
 .h2-text {
-	@apply text-2xl font-medium;
+  @apply text-2xl font-medium;
 }
 
 h3,
 .h3-text {
-	@apply text-xl font-medium;
+  @apply text-xl font-medium;
 }
 
 h6,
 .h6-text {
-	@apply text-[15px];
+  @apply text-[15px];
 }
 
 p,
 .p-text {
-	@apply text-[13px];
+  @apply text-[13px];
+}
+
+.input {
+  @apply p-text h-[30px] bg-[#C9CFD8] opacity-[0.88] placeholder:text-[#888F99] p-[10px] py-[6px] block rounded-md border focus:border-[#C9CFD8] focus:bg-transparent outline-none;
+}
+
+.button {
+  @apply px-6 py-2 rounded-md font-medium text-base transition duration-200 bg-slate-300 hover:bg-slate-400 text-zinc-900
+}
+
+.black-button {
+  @apply px-6 py-2 rounded-md font-medium text-base transition duration-200 bg-neutral-700 hover:bg-neutral-600 text-neutral-200
+}
+
+.hidden-input {
+  @apply opacity-0 h-0 w-0 leading-[0] overflow-hidden p-0 m-0
 }

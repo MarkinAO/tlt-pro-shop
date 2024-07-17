@@ -1,11 +1,12 @@
 "use client";
+import { useCheckAuth } from "@/shared/hooks/checkAuth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export const Sidebar = () => {
   const router = useRouter();
-  const user = JSON.parse(sessionStorage.getItem("user") || "");
-  const isAdmin = user.roles.includes(1);
+  const { user, isAdmin} = useCheckAuth();
+
   return (
     <div className="h-screen w-56 bg-slate-100 flex flex-col">
       <div className="h1-text flex items-center gap-1 justify-center py-3 text-slate-100 mb-6 bg-gray-800 rounded-br-2xl">

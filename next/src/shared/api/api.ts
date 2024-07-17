@@ -38,3 +38,25 @@ export const fetcher = (url: string, params?: RequestInit) => {
     },
   }).then((res) => res.json());
 };
+
+export const createAPI = async (formData : FormData) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const res = await fetch(BASE_URL + "/products", {
+      method: "POST",
+      headers: {
+        authorization: `Token ${token}`,
+      },
+      body: formData,
+    });
+
+    if (res.status === 200) {
+      console.log("Ok");
+    } else {
+      throw new Error(`Unexpected response code: ${res.status}`);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
