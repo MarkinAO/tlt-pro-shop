@@ -8,7 +8,7 @@ import { GridItem } from "./components/gridItem";
 import { useStore } from "@/model/store";
 
 export const ProductList = () => {
-  const { listType, currentPage, search } = useStore((store) => store);
+  const { listType, currentPage, search } = useStore((store) => store);  
   const URL = `/products?_page=${currentPage}${search && "&q=" + search}`;
   const { data } = useSWR<TProduct[]>(URL, () =>
     fetcher(URL, {
@@ -23,7 +23,7 @@ export const ProductList = () => {
   ).data;
 
   return (
-    <>
+    <>      
       {listType && (
         <div className="flex justify-between py-[31px] px-[10px]">
           <div className="w-1/6">Фото</div>

@@ -12,7 +12,7 @@ type Store = {
   addPage: () => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
-  user: TUser | undefined,
+  user: TUser | undefined;
   setUser: (user: TUser | undefined) => void
 };
 
