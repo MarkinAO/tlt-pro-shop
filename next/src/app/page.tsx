@@ -7,12 +7,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useCheckAuth } from "@/shared/hooks/checkAuth";
 
-// import { Metadata } from 'next';
-
-// export const metadata: Metadata = {
-// 	title: 'Авторизация',
-// };
-
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(3),

@@ -6,15 +6,25 @@ import Loader from "../loader/Loader";
 import { LineItem } from "./components/lineItem";
 import { GridItem } from "./components/gridItem";
 import { useStore } from "@/model/store";
+import { useEffect } from "react";
 
 export const ProductList = () => {
-  const { listType, currentPage, search } = useStore((store) => store);  
+  const { listType, currentPage, search, delPage, setCurrentPage } = useStore(
+    (store) => store
+  );
   const URL = `/products?_page=${currentPage}${search && "&q=" + search}`;
   const { data } = useSWR<TProduct[]>(URL, () =>
     fetcher(URL, {
       method: "GET",
     })
   );
+
+  useEffect(() => {
+    if (data?.length === 0) {
+      setCurrentPage(currentPage - 1);
+      delPage();
+    }
+  }, [data]);
 
   const manufactures = useSWR<TProduct[]>("/manufacturers", () =>
     fetcher("/manufacturers", {
@@ -23,15 +33,15 @@ export const ProductList = () => {
   ).data;
 
   return (
-    <>      
+    <>
       {listType && (
         <div className="flex justify-between py-[31px] px-[10px]">
-          <div className="w-1/6">Фото</div>
-          <div className="w-1/6 text-center">Название</div>
-          <div className="w-1/6 text-center">Количество</div>
-          <div className="w-1/6 text-center">Производитель</div>
-          <div className="w-1/6 text-center">Цена</div>
-          <div className="w-1/6"></div>
+          <div className="w-1/6 h6-text text-slate-900">Фото</div>
+          <div className="w-1/6 h6-text text-slate-900 text-center">Название</div>
+          <div className="w-1/6 h6-text text-slate-900 text-center">Количество</div>
+          <div className="w-1/6 h6-text text-slate-900 text-center">Производитель</div>
+          <div className="w-1/6 h6-text text-slate-900 text-center">Цена</div>
+          <div className="w-1/6 h6-text text-slate-900"></div>
         </div>
       )}
       <div className="flex flex-col gap-[10px]">

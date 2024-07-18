@@ -41,11 +41,11 @@ export const LineItem = ({ item, customClass, manufacture }: ILineItem) => {
             style={{ width: "auto", height: "auto" }}
           />
         </div>
-        <div className="w-1/6 text-center">{name}</div>
-        <div className="w-1/6 text-center">{quantity}</div>
-        <div className="w-1/6 text-center break-all">{manufacture}</div>
-        <div className="w-1/6 text-center">{price} р</div>
-        <div className="w-1/6 text-center flex gap-[10px] justify-end px-[10px]">
+        <div className="w-1/6 text-center p-text text-slate-900">{name}</div>
+        <div className="w-1/6 text-center p-text text-slate-900">{quantity}</div>
+        <div className="w-1/6 text-center p-text text-slate-900 break-all">{manufacture}</div>
+        <div className="w-1/6 text-center p-text text-slate-900">{price} р</div>
+        <div className="w-1/6 text-center p-text text-slate-900 flex gap-[10px] justify-end px-[10px]">
           {isAdmin && (
             <Image
               onClick={() => {

@@ -39,7 +39,7 @@ export const fetcher = (url: string, params?: RequestInit) => {
   }).then((res) => res.json());
 };
 
-export const createAPI = async (formData : FormData) => {
+export const createAPI = async (formData: FormData) => {
   try {
     const token = sessionStorage.getItem("token");
     const res = await fetch(BASE_URL + "/products", {
@@ -68,11 +68,11 @@ export const getProductAPI = async (id: string) => {
       method: "GET",
       headers: {
         authorization: `Token ${token}`,
-      }
+      },
     });
 
     if (res.status === 200) {
-      return res.json()
+      return res.json();
     } else {
       throw new Error(`Unexpected response code: ${res.status}`);
     }
@@ -82,7 +82,7 @@ export const getProductAPI = async (id: string) => {
   }
 };
 
-export const updateAPI = async (formData : FormData, id: string) => {
+export const updateAPI = async (formData: FormData, id: string) => {
   try {
     const token = sessionStorage.getItem("token");
     const res = await fetch(BASE_URL + "/products/" + id, {
@@ -116,6 +116,27 @@ export const deleteAPI = async (id: string) => {
 
     if (res.status === 200) {
       console.log("Ok");
+    } else {
+      throw new Error(`Unexpected response code: ${res.status}`);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getCrumbAPI = async () => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const res = await fetch(BASE_URL + "/random_breadcrumb", {
+      method: "GET",
+      headers: {
+        authorization: `Token ${token}`,
+      },
+    });
+
+    if (res.status === 200) {
+      return res.json();
     } else {
       throw new Error(`Unexpected response code: ${res.status}`);
     }

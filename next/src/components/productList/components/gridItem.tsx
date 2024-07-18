@@ -18,11 +18,11 @@ export const GridItem = ({ item, manufacture }: IGridItem) => {
           alt=""
           style={{ width: "auto", height: "auto" }}
         />
-      <div className="text-center">{name}</div>
-      <div className="text-center break-all">{manufacture}</div>
+      <div className="text-center text-[16px] text-slate-900">{name}</div>
+      <div className="text-center break-all p-text text-slate-900">{manufacture}</div>
       <div className="grid grid-cols-2 px-[10px]">
-        <div className="text-left">{quantity}</div>
-        <div className="text-right">{price}</div>
+        <div className="text-left p-text text-slate-900">{quantity}</div>
+        <div className="text-right p-text text-slate-900">{price}</div>
       </div>
     </div>
   );
