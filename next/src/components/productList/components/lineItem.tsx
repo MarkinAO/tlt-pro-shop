@@ -2,8 +2,10 @@ import type { TProduct } from "@/model/model";
 import Image from "next/image";
 import editIcon from "./assets/edit.svg";
 import deleteIcon from "./assets/delete.svg";
-import { CreatePopup } from "../../popups/createPopup";
+import { CreatePopup } from "@/components/popups/createPopup";
+import { DeletePopup } from "@/components/popups/deletePopup";
 import { useState } from "react";
+import { useCheckAuth } from "@/shared/hooks/checkAuth";
 
 interface ILineItem {
   item: TProduct;
@@ -14,14 +16,17 @@ interface ILineItem {
 export const LineItem = ({ item, customClass, manufacture }: ILineItem) => {
   const { photoUrl, name, quantity, price } = item;
   const [popup, setPopup] = useState(false);
+  const [delPopup, setDelPopup] = useState(false);
   const [id, setId] = useState("");
-  const togglePopup = () => setPopup(!popup);
-  const isAdmin = JSON.parse(
-    sessionStorage.getItem("user") || ""
-  ).roles.includes(1);
+  const togglePopup = (flag: boolean, func: Function) => func(!flag);
+  const { isAdmin } = useCheckAuth();
+
   return (
     <>
-      {popup && <CreatePopup closeHandler={togglePopup} id={id} />}
+      {delPopup && (
+        <DeletePopup closeHandler={() => togglePopup(delPopup, setDelPopup)} id={id} />
+      )}
+      {popup && <CreatePopup closeHandler={() => togglePopup(popup, setPopup)} id={id} />}
       <div
         className={`flex justify-between h-[80px] px-[10px] items-center rounded-[6px] ${
           customClass && "bg-[#0F172A]/[.03]"
@@ -45,7 +50,7 @@ export const LineItem = ({ item, customClass, manufacture }: ILineItem) => {
             <Image
               onClick={() => {
                 setId(String(item.id));
-                togglePopup();
+                togglePopup(popup, setPopup);
               }}
               className="cursor-pointer"
               src={editIcon}
@@ -55,6 +60,10 @@ export const LineItem = ({ item, customClass, manufacture }: ILineItem) => {
           )}
           {isAdmin && (
             <Image
+              onClick={() => {
+                setId(String(item.id));
+                togglePopup(delPopup, setDelPopup);
+              }}
               className="cursor-pointer"
               src={deleteIcon}
               alt=""

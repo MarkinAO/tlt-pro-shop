@@ -14,3 +14,8 @@ export type TUser = {
   password: string;
   roles: number[];
 };
+
+export type TManufacture = {
+  name: string;
+  id: number;
+};

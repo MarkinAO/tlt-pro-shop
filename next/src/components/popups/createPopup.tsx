@@ -1,7 +1,7 @@
 import { Popup } from "../layouts/popup";
 import useSWR from "swr";
 import { fetcher } from "@/shared/api/api";
-import type { TProduct } from "@/model/model";
+import type { TProduct, TManufacture } from "@/model/model";
 import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,11 +24,6 @@ interface ICreatePopup {
   closeHandler: Function;
   id?: string;
 }
-
-type TManufacture = {
-  name: string;
-  id: number;
-};
 
 export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
   const [manufacture, setManufacture] = useState<TManufacture | null>();
@@ -103,14 +98,11 @@ export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
       formData.append(key, requestData[key]);
     }
     
-    if (filePicker.current?.files) {
-      formData.append("image", filePicker.current?.files[0]);
-      console.log(filePicker.current?.files[0])
-    } 
-    if(id.length > 0) {
+    if(file) {
       formData.delete("image")
       formData.append("image", file);
     }
+    
     if (id.length > 0) {
       updateAPI(formData, id);
     } else {
@@ -256,7 +248,7 @@ export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
           Отмена
         </button>
         <button
-          className={`button ${!isValid && "hover:bg-slate-300"}`}
+          className={`button ${!isValid && "hover:bg-slate-400"}`}
           disabled={!isValid}
           type="submit"
         >
