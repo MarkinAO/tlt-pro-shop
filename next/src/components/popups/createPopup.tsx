@@ -1,12 +1,11 @@
 import { Popup } from "../layouts/popup";
-import useSWR from "swr";
-import { fetcher } from "@/shared/api/api";
 import type { TProduct, TManufacture } from "@/model/model";
 import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createAPI, updateAPI, getProductAPI } from "@/shared/api/api";
+import { createAPI, updateAPI } from "@/shared/api/api";
+import { useDataManager } from "@/shared/hooks/useDataManager";
 import Image from "next/image";
 import arrow from "./assets/arrow.svg";
 import fileBox from "./assets/fileBox.svg";
@@ -32,11 +31,7 @@ export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [product, setProduct] = useState<TProduct | undefined>(undefined);
   const filePicker = useRef<HTMLInputElement>(null);
-  const manufactures = useSWR<TManufacture[]>("/manufacturers", () =>
-    fetcher("/manufacturers", {
-      method: "GET",
-    })
-  ).data;
+  const { products, manufactures, updateProducts } = useDataManager();
 
   const {
     register,
@@ -44,37 +39,17 @@ export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
     handleSubmit,
     reset,
     setValue,
+    trigger,
   } = useForm<FormFields>({
-    mode: "onBlur",
+    mode: "onSubmit",
     resolver: zodResolver(formSchema),
   });
-  
-  const getProd = async () => {
-    if (id.length > 0 && !product) {
-      const data = await getProductAPI(id);
-      fetch(data.photoUrl)
-        .then((res) => {
-          if (res.status === 200) {
-            return res.blob();
-          }
-        })
-        .then((res) => {
-          if (res) {
-            const newFile = new File([res], "new_image.jpg", {
-              type: "image/jpeg",
-            });            
-            setFile(newFile);            
-          }
-        })
-        .catch((error) => console.error(error.message));
 
-      if (data) {
-        setProduct(data);
-      }
-    }
-  };
-  getProd();
-  
+  useEffect(() => {
+    const newProd = products?.find((el) => el.id === Number(id));
+    setProduct(newProd);
+  }, []);
+
   useEffect(() => {
     if (product) {
       setValue("name", product.name);
@@ -84,25 +59,30 @@ export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
       setManufacture(
         manufactures?.find((el) => el.id === product.manufacturerId) || null
       );
+      const getBlob = async () => await (await fetch(product.photoUrl)).blob();
+      getBlob()
+        .then((res) => {
+          const newFile = new File([res], "new_image.jpg", {
+            type: "image/jpeg",
+          });
+          setFile(newFile);
+        })
+        .catch((error) => console.error(error.message));
+      trigger();
     }
   }, [product]);
 
-  const onSubmit: SubmitHandler<FormFields> = (data: any) => {
-    const requestData = {
-      ...data,
-      quantity: Number(data.quantity),
-      manufactureId: manufacture?.id,
-    };
+  const onSubmit: SubmitHandler<FormFields> = (data: FormFields) => {
     const formData = new FormData();
-    for (const key in requestData) {
-      formData.append(key, requestData[key]);
+    formData.set("name", data.name);
+    formData.set("price", data.price);
+    formData.set("quantity", data.quantity);
+    formData.set("manufacturerId", String(manufacture?.id));
+
+    if (file) {
+      formData.set("image", file, file.name);
     }
-    
-    if(file) {
-      formData.delete("image")
-      formData.append("image", file);
-    }
-    
+
     if (id.length > 0) {
       updateAPI(formData, id);
     } else {
@@ -110,6 +90,7 @@ export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
     }
     reset();
     setManufacture(null);
+    updateProducts();
     closeHandler();
   };
 
@@ -188,12 +169,12 @@ export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
       <div className="w-full">
         <h6 className="text-zinc-900">Фото</h6>
         <div
-          className="flex flex-col items-center gap-[10px] py-[10px] cursor-pointer"
+          className="flex flex-col items-center gap-[10px] py-[10px] min-h-[120px] cursor-pointer"
           onClick={() => {
             filePicker.current?.click();
           }}
         >
-          {!file && <div className="text-gray-600">Загрузить фото</div>}
+          {!imageUrl && <div className="text-gray-600">Загрузить фото</div>}
           <input
             className="hidden-input"
             type="file"
@@ -248,7 +229,7 @@ export const CreatePopup = ({ closeHandler, id = "" }: ICreatePopup) => {
           Отмена
         </button>
         <button
-          className={`button ${!isValid && "hover:bg-slate-400"}`}
+          className={`button ${!isValid && "hover:bg-slate-300"}`}
           disabled={!isValid}
           type="submit"
         >

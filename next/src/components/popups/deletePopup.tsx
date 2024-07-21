@@ -1,10 +1,9 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Popup } from "../layouts/popup";
 import { deleteAPI, getProductAPI } from "@/shared/api/api";
-import type { TProduct, TManufacture } from "@/model/model";
+import type { TProduct } from "@/model/model";
 import Image from "next/image";
-import useSWR from "swr";
-import { fetcher } from "@/shared/api/api";
+import { useDataManager } from "@/shared/hooks/useDataManager";
 
 interface ICreatePopup {
   closeHandler: Function;
@@ -14,17 +13,13 @@ interface ICreatePopup {
 export const DeletePopup = ({ closeHandler, id }: ICreatePopup) => {
   const [confirmation, setConfirmation] = useState(false);
   const [product, setProduct] = useState<TProduct>();
-
-  const manufactures = useSWR<TManufacture[]>("/manufacturers", () =>
-    fetcher("/manufacturers", {
-      method: "GET",
-    })
-  ).data;
+  const { manufactures, updateProducts } = useDataManager();
 
   const onSubmit = (id: string, event: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     deleteAPI(id);
     closeHandler();
+    updateProducts();
   };
 
   useEffect(() => {
@@ -38,17 +33,21 @@ export const DeletePopup = ({ closeHandler, id }: ICreatePopup) => {
     <Popup onSubmit={(e) => onSubmit(id, e)}>
       {!confirmation && product && (
         <>
-          <Image
-            className="rounded-[10px]"
-            width={224}
-            height={224}
-            src={product?.photoUrl ? product?.photoUrl : ""}
-            alt={product.name}
-          />
+          <div className="flex items-center min-h-[224px]">
+            <Image
+              className="rounded-[10px]"
+              width={224}
+              height={224}
+              src={product?.photoUrl ? product?.photoUrl : ""}
+              alt={product.name}
+            />
+          </div>
           <h2 className="text-slate-900 text-center">{product.name}</h2>
           <div className="w-full text-left">Количество: {product.quantity}</div>
           <div className="w-full text-left">Цена: {product.price}</div>
-          <div className="w-full text-left">Производитель: {manufacture?.name}</div>
+          <div className="w-full text-left">
+            Производитель: {manufacture?.name}
+          </div>
           <div className="flex gap-[10px] justify-end w-full">
             <button
               className="black-button"

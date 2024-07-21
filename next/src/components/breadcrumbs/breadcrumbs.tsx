@@ -1,14 +1,23 @@
 "use client";
 import { getCrumbAPI } from "@/shared/api/api";
+import Link from "next/link";
 import { useState } from "react";
 
-interface IBreadCrumbs {}
+type EndPoint = {
+  id: number;
+  parent: number;
+  advertisement_count: number;
+  has_child_cache: boolean;
+  name_en_us: string;
+  name_ru: string;
+  name_src: string;
+};
 
-export const BreadCrumbs = ({}: IBreadCrumbs) => {
-  const [points, setPoints] = useState<string[]>([]);
+export const BreadCrumbs = () => {
+  const [points, setPoints] = useState<EndPoint[]>([]);
   const onClick = () => {
     getCrumbAPI().then((res) => {
-      setPoints([...points, res.name_ru]);
+      setPoints([...points, res]);
     });
   };
 
@@ -24,7 +33,12 @@ export const BreadCrumbs = ({}: IBreadCrumbs) => {
         <div>
           {points.map((el, i) => {
             return (
-              <span key={i}>{points.length - 1 === i ? el : el + " > "}</span>
+              // <></>
+              <Link href={"/" + el.name_src.replace(" ", "-")}>
+                <span key={i}>
+                  {points.length - 1 === i ? el.name_ru : el.name_ru + " > "}
+                </span>
+              </Link>
             );
           })}
         </div>

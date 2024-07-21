@@ -1,5 +1,5 @@
 "use client";
-import { useCheckAuth } from "@/shared/hooks/checkAuth";
+import { useCheckAuth } from "@/shared/hooks/useCheckAuth";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";

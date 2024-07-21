@@ -3,19 +3,24 @@ import { useStore } from "@/model/store";
 import Image from "next/image";
 import leftArrow from "./assets/leftArrow.svg";
 import rightArrow from "./assets/rightArrow.svg";
+import { useDataManager } from "@/shared/hooks/useDataManager";
 
 export const Pagination = () => {
   const { pages, addPage, currentPage, setCurrentPage } = useStore(
     (state) => state
   );
+  const { checkMore } = useDataManager();
+
   return (
     <>
       <div className="m-auto">
         <button
           className="button hover:bg-slate-400"
           onClick={() => {
-            addPage();
-            setCurrentPage(currentPage + 1);
+            if (checkMore) {
+              addPage();
+              setCurrentPage(currentPage + 1);
+            }
           }}
         >
           Загрузить ещё

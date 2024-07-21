@@ -1,7 +1,7 @@
 "use client";
 import { useStore } from "@/model/store";
 import { CreatePopup } from "../popups/createPopup";
-import { useCheckAuth } from "@/shared/hooks/checkAuth";
+import { useCheckAuth } from "@/shared/hooks/useCheckAuth";
 import { useState } from "react";
 
 export const Panel = () => {
@@ -10,7 +10,7 @@ export const Panel = () => {
   );
   const [popup, setPopup] = useState(false);
   const { isAdmin } = useCheckAuth();
-  const togglePopup = () => setPopup(!popup);  
+  const togglePopup = () => setPopup(!popup);
 
   return (
     <>

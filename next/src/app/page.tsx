@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authAPI } from "@/shared/api/api";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useCheckAuth } from "@/shared/hooks/checkAuth";
+import { useCheckAuth } from "@/shared/hooks/useCheckAuth";
 
 const formSchema = z.object({
   email: z.string().email(),

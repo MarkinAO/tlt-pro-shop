@@ -5,7 +5,7 @@ import deleteIcon from "./assets/delete.svg";
 import { CreatePopup } from "@/components/popups/createPopup";
 import { DeletePopup } from "@/components/popups/deletePopup";
 import { useState } from "react";
-import { useCheckAuth } from "@/shared/hooks/checkAuth";
+import { useCheckAuth } from "@/shared/hooks/useCheckAuth";
 
 interface ILineItem {
   item: TProduct;
