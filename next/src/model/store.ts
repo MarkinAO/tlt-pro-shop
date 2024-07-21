@@ -12,7 +12,7 @@ type Store = {
   currentPage: number;
   setCurrentPage: (page: number) => void;
   user: TUser | undefined;
-  setUser: (user: TUser | undefined) => void
+  setUser: (user: TUser | undefined) => void  
 };
 
 export const useStore = create<Store>()((set) => ({

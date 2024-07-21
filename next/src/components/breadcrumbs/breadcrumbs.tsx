@@ -1,25 +1,24 @@
 "use client";
 import { getCrumbAPI } from "@/shared/api/api";
 import Link from "next/link";
-import { useState } from "react";
-
-type EndPoint = {
-  id: number;
-  parent: number;
-  advertisement_count: number;
-  has_child_cache: boolean;
-  name_en_us: string;
-  name_ru: string;
-  name_src: string;
-};
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export const BreadCrumbs = () => {
-  const [points, setPoints] = useState<EndPoint[]>([]);
+  const pathname = usePathname();
+  const router = useRouter();
+  const [points, setPoints] = useState<string[]>([]);
+
   const onClick = () => {
     getCrumbAPI().then((res) => {
-      setPoints([...points, res]);
+      router.push(pathname + `/${res.name_en_us.replaceAll(" ", "-")}`);
     });
   };
+
+  useEffect(() => {
+    const newPoints = pathname.split("/").filter((el) => el !== "");
+    setPoints(newPoints);
+  }, []);
 
   return (
     <>
@@ -32,12 +31,10 @@ export const BreadCrumbs = () => {
         </button>
         <div>
           {points.map((el, i) => {
+            const linkHref = points.slice(0, i + 1).join("/");
             return (
-              // <></>
-              <Link href={"/" + el.name_src.replace(" ", "-")}>
-                <span key={i}>
-                  {points.length - 1 === i ? el.name_ru : el.name_ru + " > "}
-                </span>
+              <Link href={`/${linkHref}`} key={i}>
+                <span>{points.length - 1 === i ? el : el + " > "}</span>
               </Link>
             );
           })}

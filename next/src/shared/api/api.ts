@@ -145,3 +145,20 @@ export const getCrumbAPI = async () => {
     throw error;
   }
 };
+
+export const getCrumbsAPI = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/algorithm", {
+      method: "GET",
+    });
+
+    if (res.status === 200) {
+      return res.json();
+    } else {
+      throw new Error(`Unexpected response code: ${res.status}`);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

@@ -10,7 +10,7 @@ import logout from "./assets/logout.svg";
 export const Sidebar = () => {
   const router = useRouter();
   const { user, isAdmin } = useCheckAuth();
-  const path = usePathname();
+  const path = usePathname().split("/")[1];
 
   return (
     <div className="h-screen w-56 bg-slate-100 flex flex-col">
@@ -25,7 +25,7 @@ export const Sidebar = () => {
           </Link>
           <Image
             className={`${
-              path === "/products" && "hidden"
+              path === "products" && "hidden"
             } transition-transform duration-300 group-hover:translate-x-1.5`}
             src={arrow}
             alt=""
@@ -38,7 +38,7 @@ export const Sidebar = () => {
             </Link>
             <Image
               className={`${
-                path === "/algorithm" && "hidden"
+                path === "algorithm" && "hidden"
               } transition-transform duration-300 group-hover:translate-x-1.5`}
               src={arrow}
               alt=""
